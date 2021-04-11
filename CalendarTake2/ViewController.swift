@@ -33,7 +33,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         super.viewDidLoad()
         
         let printResult: Void = print("🦑") // 🦑
-        print(printResult)
+        //print(printResult)
         
         
         habitText.delegate = self
