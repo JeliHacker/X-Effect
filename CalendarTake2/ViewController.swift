@@ -32,10 +32,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let printResult: Void = print("🦑") // 🦑
-        //print(printResult)
-        
-        
         habitText.delegate = self
         
         currentMonth = Months[month]
