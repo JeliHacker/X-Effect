@@ -13,6 +13,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     
+    var randomDate = Date.init()
+    
     let Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     
     let DaysOfMonth = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -33,14 +35,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(randomDate)
         habitText.delegate = self
         
         currentMonth = Months[month]
         
         MonthLabel.text = "\(currentMonth) \(year)"
-        
-        printVars()
         
         Calendar.layer.borderColor = CGColor.init(red: 0, green: 0, blue: 0, alpha: 1)
         Calendar.layer.borderWidth = 1
