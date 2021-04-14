@@ -10,6 +10,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var habitText: UITextField!
     @IBOutlet weak var streakLabel: UILabel!
     
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     
     let Months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     
@@ -86,8 +88,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             return false
         }
     }
-    
+    // MARK: - Next and Back
     @IBAction func Next(_ sender: UIButton) {
+        if currentMonth == Months[month] && currentYearInt == year {
+            nextButton.isHidden = true
+        }
         switch currentMonth {
         case "December":
             month = 0
@@ -123,6 +128,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     
     @IBAction func Back(_ sender: Any) {
+        nextButton.isHidden = false
         switch currentMonth {
         case "January":
             month = 11

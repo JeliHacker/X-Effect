@@ -114,7 +114,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-m4-cy0">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AjC-m4-cy0">
                                 <rect key="frame" x="281.5" y="119.5" width="32" height="30"/>
                                 <state key="normal" title="Next"/>
                                 <connections>
@@ -170,7 +170,9 @@
                     <connections>
                         <outlet property="Calendar" destination="dKs-IT-BIX" id="3R2-zv-Ney"/>
                         <outlet property="MonthLabel" destination="gZ3-y5-mqJ" id="Mtf-CF-sZV"/>
+                        <outlet property="backButton" destination="g72-Zz-uOE" id="R0H-Is-uqC"/>
                         <outlet property="habitText" destination="mE4-3l-WHb" id="R1q-3h-frW"/>
+                        <outlet property="nextButton" destination="AjC-m4-cy0" id="ubn-0k-K6O"/>
                         <outlet property="streakLabel" destination="02l-NV-ny8" id="0yh-Ml-XY3"/>
                     </connections>
                 </viewController>
