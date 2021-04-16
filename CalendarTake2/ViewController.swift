@@ -35,7 +35,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
         print(randomDate)
+        
         habitText.delegate = self
         
         currentMonth = Months[month]
