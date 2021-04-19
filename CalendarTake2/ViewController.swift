@@ -36,6 +36,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        var dateRangeMin = DateComponents()
+        dateRangeMin.year = 1980
+        
+        var dateRangeMax = DateComponents()
+        dateRangeMax.year = 1981
         
         print(randomDate)
         
@@ -48,13 +53,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         Calendar.layer.borderColor = CGColor.init(red: 0, green: 0, blue: 0, alpha: 1)
         Calendar.layer.borderWidth = 1
         
-        print("\(currentYearInt) is a leap year: \(isALeapYear(year: currentYearInt))")
-        
         //Looks for single or multiple taps.
          let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
 
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
-        //tap.cancelsTouchesInView = false
+        tap.cancelsTouchesInView = false
 
         view.addGestureRecognizer(tap)
     }
@@ -71,13 +74,30 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         view.endEditing(true)
     }
     
-    
+    func pushDate(stack: [[Int]], date: [Int]) -> [[Int]] {
+        var count = 0
+        var newArray: [[Int]] = []
+        var dateAdded = false
+        for stackDate in stack {
+            if (isDateBeforeDate(date1: date, date2: stackDate) && !dateAdded) {
+                newArray.append(date)
+                dateAdded = true
+            }
+            newArray.append(stackDate)
+            count += 1
+            print("newArray: \(newArray)")
+        }
+        if (!dateAdded) {
+            newArray.append(date)
+        }
+        return newArray
+    }
     
     func determineCurrentStreak() -> Int {
         return 1
     }
     
-    func isDateBeforeDate(date1: [Int], date2: [Int]) -> Bool {
+    func isDateBeforeDate(date1: [Int], date2: [Int]) -> Bool { // return true if date1 is before date2, false otherwise
         let yearValueD1 = date1[0] * 100
         let yearValueD2 = date2[0] * 100
         let monthValueD1 = date1[1] * 10
@@ -93,9 +113,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     // MARK: - Next and Back
     @IBAction func Next(_ sender: UIButton) {
-        if currentMonth == Months[month] && currentYearInt == year {
-            nextButton.isHidden = true
-        }
+        
         switch currentMonth {
         case "December":
             month = 0
@@ -109,7 +127,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
                 DaysInMonths[1] = 28
                 print("\(year) is not a leap year")
             }
-            //print("\(year) is a leap year: \(isALeapYear(year: year))")
+            
             GetStartDateDayPosition()
             
             currentMonth = Months[month]
@@ -126,6 +144,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             currentMonth = Months[month]
             MonthLabel.text = "\(currentMonth) \(year)"
             Calendar.reloadData()
+        }
+        if currentMonthInt == month && currentYearInt == year {
+            nextButton.isHidden = true
         }
     }
     
@@ -225,7 +246,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Calendar", for: indexPath) as! DateCollectionViewCell
-        cell.backgroundColor = UIColor.clear
+
+        
+        cell.backgroundColor = UIColor.systemGray5
         cell.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
         cell.layer.borderWidth = 1
         
@@ -246,16 +269,22 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             cell.isHidden = false
         }
         
+        let cellDate = [year,month,Int(cell.DateLabel.text!)!]
         
+        for day in completedDays {
+            //print("day: \(day)")
+            if day == cellDate {
+                cell.backgroundColor = UIColor.blue
+            }
+        }
+        // checks for current day, makes it yellow
         if Int(cell.DateLabel.text!)! == day && currentCalendar.component(.month, from: date) == month + 1 && currentYearInt == year{
-            print("year = \(year) currentYear = \(currentYearInt)")
             cell.backgroundColor = UIColor.yellow //needs custom color for dark mode
             cell.DateLabel.backgroundColor = UIColor.yellow
         } else {
-            cell.backgroundColor = UIColor.systemGray5
+            //cell.backgroundColor = UIColor.systemGray5
             cell.DateLabel.backgroundColor = UIColor.clear
         }
-        
         
         return cell
     }
@@ -269,10 +298,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         if isDateBeforeDate(date1: cellDate, date2: currentDate) || cellDate == currentDate{
             if cell.backgroundColor == UIColor.blue {
-                completedDays.remove(at: 0)     // needs revision
+                let firstIndex = completedDays.firstIndex(of: cellDate)
+                completedDays.remove(at: firstIndex!)     // needs revision
                 cell.backgroundColor = UIColor.systemGray5
             } else {
-                completedDays.append(cellDate)
+                //completedDays.append(cellDate)
+                completedDays = pushDate(stack: completedDays, date:cellDate)
                 cell.backgroundColor = UIColor.blue
             }
             
