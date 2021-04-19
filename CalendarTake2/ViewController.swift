@@ -50,6 +50,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         MonthLabel.text = "\(currentMonth) \(year)"
         
+        GetStartDateDayPosition()
+        
         Calendar.layer.borderColor = CGColor.init(red: 0, green: 0, blue: 0, alpha: 1)
         Calendar.layer.borderWidth = 1
         
@@ -85,7 +87,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             }
             newArray.append(stackDate)
             count += 1
-            print("newArray: \(newArray)")
+            //print("newArray: \(newArray)")
         }
         if (!dateAdded) {
             newArray.append(date)
@@ -186,26 +188,37 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
     
     func GetStartDateDayPosition() {
+        print("GetStartDateDayPosition called")
         switch Direction {
         case 0:
+            print("case = 0")
+            print("weekday = \(weekday)")
+            print("day = \(day)")
             switch day{
             case 1...7:
-                NumberOfEmptyBox = weekday - day + 1
+                NumberOfEmptyBox = weekday - day
+                print("case 1-7")
             case 8...14:
-                NumberOfEmptyBox = weekday - day - 7 + 1
+                print("case 8-14")
+                NumberOfEmptyBox = weekday - day - 7
             case 15...21:
-                NumberOfEmptyBox = weekday - day - 14 + 1
+                print("case 15-21")
+                NumberOfEmptyBox = day - weekday - 14
             case 22...28:
-                NumberOfEmptyBox = weekday - day - 21 + 1
+                print("case 22-28")
+                NumberOfEmptyBox = weekday - day - 21
             case 29...31:
-                NumberOfEmptyBox = weekday - day - 28 + 1
+                print("case 29-31")
+                NumberOfEmptyBox = weekday - day - 28
             default:
                 break
+            
             }
-        PositionIndex = NumberOfEmptyBox
-        print(PositionIndex)
+            PositionIndex = NumberOfEmptyBox
+        print("positionIndex2 = \(PositionIndex)")
             
         case 1...:
+            print("case = 1")
             print("PositionIndex before = " + String(PositionIndex))
             NextNumberOfEmptyBox = (PositionIndex + DaysInMonths[month])%7 // + 0 originally
             if NextNumberOfEmptyBox == 6 {
@@ -214,6 +227,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             PositionIndex = NextNumberOfEmptyBox
             
         case -1:
+            print("case = -1")
+            print("PositionIndex before = " + String(PositionIndex))
             PreviousNumberOfEmptyBox = (7 - (DaysInMonths[month] - PositionIndex) % 7) // + 0 originally
             if PreviousNumberOfEmptyBox == 7 {
                 PreviousNumberOfEmptyBox = 0
@@ -231,8 +246,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         //return DaysInMonths[month] + 1
+        print("LINE 248")
         switch Direction {
         case 0:
+            print("NumberOfEmptyBox = \(NumberOfEmptyBox)")
             return DaysInMonths[month] + 1 + NumberOfEmptyBox
         case 1...:
             return DaysInMonths[month] + 1 + NextNumberOfEmptyBox
@@ -246,7 +263,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Calendar", for: indexPath) as! DateCollectionViewCell
-
+        
         
         cell.backgroundColor = UIColor.systemGray5
         cell.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
@@ -254,6 +271,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         switch Direction {
         case 0:
+            //print("line 262 case = 0")
+            print("NumberOfEmptyBox = \(NumberOfEmptyBox)")
             cell.DateLabel.text = "\(indexPath.row - NumberOfEmptyBox)"
         case 1:
             cell.DateLabel.text = "\(indexPath.row - NextNumberOfEmptyBox)"
@@ -272,11 +291,11 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         let cellDate = [year,month,Int(cell.DateLabel.text!)!]
         
         for day in completedDays {
-            //print("day: \(day)")
             if day == cellDate {
                 cell.backgroundColor = UIColor.blue
             }
         }
+        
         // checks for current day, makes it yellow
         if Int(cell.DateLabel.text!)! == day && currentCalendar.component(.month, from: date) == month + 1 && currentYearInt == year{
             cell.backgroundColor = UIColor.yellow //needs custom color for dark mode
